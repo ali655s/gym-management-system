@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" x-data="{ sidebarOpen: false }" @keydown.window.escape="sidebarOpen = false">
+<html lang="en" x-data="{ mobileSidebarOpen: false }" @keydown.window.escape="mobileSidebarOpen = false">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,17 +12,24 @@
 <!-- Mobile top bar removed to avoid duplicate header -->
 
     <div class="flex min-h-screen">
+        <!-- Mobile backdrop overlay -->
+        <div x-show="mobileSidebarOpen" 
+             @click="mobileSidebarOpen = false" 
+             class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden" 
+             style="display: none;"></div>
+
         <!-- Sidebar -->
-        <aside class="bg-gray-800 w-64 hidden md:block flex-shrink-0" x-show="sidebarOpen" @click.away="sidebarOpen = false">
+        <aside :class="mobileSidebarOpen ? 'fixed inset-y-0 left-0 z-50 flex flex-col' : 'hidden md:flex md:flex-col'" 
+               class="bg-gray-800 w-64 flex-shrink-0">
             <div class="p-4 flex items-center justify-between">
                 <h2 class="text-xl font-bold text-red-500">Gym Admin</h2>
-                <button @click="sidebarOpen = false" class="text-gray-400 md:hidden">
+                <button @click="mobileSidebarOpen = false" class="text-gray-400 hover:text-white md:hidden" aria-label="Close sidebar">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                 </button>
             </div>
-            <nav class="mt-4 space-y-2">
+            <nav class="mt-4 space-y-2 flex-1 overflow-y-auto">
                 <x-admin-nav-link href="{{ route('admin.dashboard') }}" icon="home" :active="request()->routeIs('admin.dashboard')">Overview</x-admin-nav-link>
                 <x-admin-nav-link href="{{ route('admin.branches.index') }}" icon="building" :active="request()->routeIs('admin.branches.*')">Branches</x-admin-nav-link>
                 <x-admin-nav-link href="{{ route('admin.membership-plans.index') }}" icon="clipboard-list" :active="request()->routeIs('admin.membership-plans.*')">Membership Plans</x-admin-nav-link>
@@ -35,13 +42,34 @@
                 <x-admin-nav-link href="{{ route('admin.franchise-applications.index') }}" icon="office-building" :active="request()->routeIs('admin.franchise-applications.*')">Franchise Applications</x-admin-nav-link>
                 <x-admin-nav-link href="{{ route('admin.contact-messages.index') }}" icon="mail" :active="request()->routeIs('admin.contact-messages.*')">Contact Messages</x-admin-nav-link>
             </nav>
+            <div class="p-4 border-t border-gray-700">
+                <a href="{{ route('home') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-gray-400 hover:text-white bg-gray-900/40 hover:bg-gray-700 rounded transition">
+                    <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                    <span>Visit Website</span>
+                </a>
+            </div>
         </aside>
 
         <!-- Main content -->
         <main class="flex-1 overflow-y-auto p-6">
             <header class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-semibold">@yield('title', 'Dashboard')</h1>
+                <div class="flex items-center space-x-3">
+                    <button @click="mobileSidebarOpen = !mobileSidebarOpen" class="text-gray-400 hover:text-white focus:outline-none md:hidden" aria-label="Open sidebar">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                    <h1 class="text-2xl font-semibold">@yield('title', 'Dashboard')</h1>
+                </div>
                 <div class="flex items-center space-x-4">
+                    <a href="{{ route('home') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 hover:text-white text-sm rounded border border-gray-700 transition">
+                        <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                        <span>View Website</span>
+                    </a>
                     <span class="text-gray-300">{{ Auth::user()->name }}</span>
                     <a href="{{ route('logout') }}" class="text-gray-300 hover:text-white">Logout</a>
                 </div>

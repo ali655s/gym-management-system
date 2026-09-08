@@ -46,6 +46,16 @@
             <!-- Right Side CTA / Auth Area -->
             <div class="hidden md:flex items-center space-x-3">
                 @auth
+                    @if(Auth::user()->isAdmin())
+                        <a href="{{ route('admin.dashboard') }}" 
+                           class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white text-xs font-bold uppercase tracking-wider shadow-lg shadow-rose-950/60 border border-rose-500/30 transition duration-200">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            <span>Dashboard</span>
+                        </a>
+                    @endif
+
                     <!-- Authenticated Dropdown -->
                     <div class="relative" @click.away="userDropdownOpen = false">
                         <button @click="userDropdownOpen = !userDropdownOpen" 
@@ -83,6 +93,14 @@
                             </div>
 
                             <div class="py-1">
+                                @if(Auth::user()->isAdmin())
+                                    <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-2 text-sm font-semibold text-rose-400 bg-rose-950/30 hover:bg-rose-900/50 hover:text-white transition">
+                                        <svg class="h-4 w-4 mr-2.5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                        </svg>
+                                        Admin Dashboard
+                                    </a>
+                                @endif
                                 <a href="{{ route('member.memberships') }}" class="flex items-center px-4 py-2 text-sm text-neutral-200 hover:bg-neutral-800 hover:text-white transition">
                                     <svg class="h-4 w-4 mr-2.5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
@@ -178,7 +196,14 @@
                         <p class="text-sm font-semibold text-white">{{ Auth::user()->name }}</p>
                         <p class="text-xs text-neutral-400">{{ Auth::user()->email }}</p>
                     </div>
-                </div>
+                @if(Auth::user()->isAdmin())
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center px-3 py-2.5 rounded-lg text-sm font-bold text-white bg-gradient-to-r from-red-600 to-rose-700 border border-rose-500/40 hover:from-red-500 hover:to-rose-600 mb-2 transition">
+                        <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        Admin Dashboard
+                    </a>
+                @endif
                 <a href="{{ route('member.memberships') }}" class="block px-3 py-2 rounded-lg text-sm text-neutral-300 hover:text-white hover:bg-neutral-900">
                     My Memberships
                 </a>

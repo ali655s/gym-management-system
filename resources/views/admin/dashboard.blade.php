@@ -28,9 +28,20 @@
 </div>
 
 <script>
-    document.addEventListener('alpine:init', () => {
-        const ctx = document.getElementById('revenueChart').getContext('2d');
-        const chart = new Chart(ctx, {
+    document.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById('revenueChart');
+        if (!canvas) {
+            console.error('revenueChart canvas element not found.');
+            return;
+        }
+
+        if (typeof Chart === 'undefined') {
+            console.error('Chart.js library is not loaded or undefined.');
+            return;
+        }
+
+        const ctx = canvas.getContext('2d');
+        new Chart(ctx, {
             type: 'line',
             data: {
                 labels: @json($monthlyLabels),

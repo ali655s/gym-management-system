@@ -11,9 +11,29 @@ class ContactMessageController extends Controller
     /**
      * Display a listing of contact messages.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $messages = ContactMessage::orderBy('created_at', 'desc')->paginate(15);
+        $query = ContactMessage::query();
+
+        if ($request->filled('status')) {
+            if ($request->status === 'unread') {
+                $query->where('is_read', false);
+            } elseif ($request->status === 'read') {
+                $query->where('is_read', true);
+            }
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('message', 'like', "%{$search}%");
+            });
+        }
+
+        $messages = $query->latest('created_at')->paginate(15)->withQueryString();
+
         return view('admin.contact-messages.index', compact('messages'));
     }
 
