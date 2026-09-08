@@ -23,7 +23,8 @@ class BranchController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('city', 'like', "%{$search}%")
-                  ->orWhere('address', 'like', "%{$search}%");
+                  ->orWhere('address', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%");
             });
         }
 
@@ -45,6 +46,13 @@ class BranchController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        if ($request->filled('map_link')) {
+            $mapLink = trim($request->map_link);
+            if (!preg_match('~^(?:f|ht)tps?://~i', $mapLink)) {
+                $request->merge(['map_link' => 'https://' . $mapLink]);
+            }
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'city' => ['required', 'string', 'max:100'],
@@ -53,6 +61,9 @@ class BranchController extends Controller
             'map_link' => ['nullable', 'url', 'max:500'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'is_active' => ['nullable', 'boolean'],
+        ], [
+            'map_link.url' => 'The map link must be a valid URL (e.g. https://maps.google.com/?q=...)',
+            'image.max' => 'The image size may not exceed 2MB.',
         ]);
 
         $validated['is_active'] = $request->boolean('is_active');
@@ -80,6 +91,13 @@ class BranchController extends Controller
      */
     public function update(Request $request, Branch $branch): RedirectResponse
     {
+        if ($request->filled('map_link')) {
+            $mapLink = trim($request->map_link);
+            if (!preg_match('~^(?:f|ht)tps?://~i', $mapLink)) {
+                $request->merge(['map_link' => 'https://' . $mapLink]);
+            }
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'city' => ['required', 'string', 'max:100'],
@@ -88,6 +106,9 @@ class BranchController extends Controller
             'map_link' => ['nullable', 'url', 'max:500'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'is_active' => ['nullable', 'boolean'],
+        ], [
+            'map_link.url' => 'The map link must be a valid URL (e.g. https://maps.google.com/?q=...)',
+            'image.max' => 'The image size may not exceed 2MB.',
         ]);
 
         $validated['is_active'] = $request->boolean('is_active');

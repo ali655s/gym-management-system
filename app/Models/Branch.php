@@ -69,4 +69,22 @@ class Branch extends Model
     {
         return $this->hasMany(Member::class);
     }
+
+    /**
+     * Get the display image URL for the branch.
+     */
+    public function getImageUrlAttribute(): string
+    {
+        if ($this->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($this->image)) {
+            return asset('storage/' . $this->image);
+        }
+
+        $defaultImages = [
+            'Downtown Flagship' => 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=800&q=80',
+            'Seaside Arena' => 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80',
+            'Oasis Health Club' => 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=800&q=80',
+        ];
+
+        return $defaultImages[$this->name] ?? 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80';
+    }
 }

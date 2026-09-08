@@ -36,29 +36,32 @@
                 
                 <!-- Branch Banner Header -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center pb-8 border-b border-neutral-800">
-                    <div class="lg:col-span-2 space-y-3">
-                        <div class="flex items-center space-x-3">
-                            <span class="px-3.5 py-1 rounded-full bg-rose-600 text-white text-xs font-black uppercase tracking-wider">
-                                {{ $branch->city }}
-                            </span>
-                            <span class="text-xs text-neutral-400 font-medium">Flagship Arena</span>
-                        </div>
-                        <h2 class="text-3xl sm:text-4xl font-black uppercase text-white tracking-tight">
-                            {{ $branch->name }}
-                        </h2>
-                        <div class="flex flex-wrap gap-4 text-xs sm:text-sm text-neutral-400 pt-1">
-                            <span class="flex items-center">
-                                <svg class="h-4 w-4 mr-1.5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                </svg>
-                                {{ $branch->address }}
-                            </span>
-                            <span class="flex items-center">
-                                <svg class="h-4 w-4 mr-1.5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                </svg>
-                                {{ $branch->phone }}
-                            </span>
+                    <div class="lg:col-span-2 flex flex-col sm:flex-row gap-6 items-start">
+                        <img src="{{ $branch->image_url }}" alt="{{ $branch->name }}" class="w-full sm:w-40 h-28 object-cover rounded-2xl border border-neutral-700 shrink-0 shadow-lg">
+                        <div class="space-y-2">
+                            <div class="flex items-center space-x-3">
+                                <span class="px-3.5 py-1 rounded-full bg-rose-600 text-white text-xs font-black uppercase tracking-wider">
+                                    {{ $branch->city }}
+                                </span>
+                                <span class="text-xs text-neutral-400 font-medium">Flagship Arena</span>
+                            </div>
+                            <h2 class="text-2xl sm:text-3xl font-black uppercase text-white tracking-tight">
+                                {{ $branch->name }}
+                            </h2>
+                            <div class="flex flex-wrap gap-4 text-xs sm:text-sm text-neutral-400 pt-1">
+                                <span class="flex items-center">
+                                    <svg class="h-4 w-4 mr-1.5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    </svg>
+                                    {{ $branch->address }}
+                                </span>
+                                <span class="flex items-center">
+                                    <svg class="h-4 w-4 mr-1.5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                    </svg>
+                                    {{ $branch->phone }}
+                                </span>
+                            </div>
                         </div>
                     </div>
 
@@ -75,14 +78,14 @@
                     </div>
                 </div>
 
-                <!-- 3 Plans for this branch -->
+                <!-- Plans for this branch -->
                 <div class="space-y-4">
                     <h3 class="text-sm font-bold uppercase tracking-widest text-neutral-300">
                         1. Select Membership Duration
                     </h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        @foreach($branch->membershipPlans as $plan)
+                        @forelse($branch->membershipPlans as $plan)
                             @php
                                 $durationLabel = match($plan->duration) {
                                     '1_month' => '1 Month Pass',

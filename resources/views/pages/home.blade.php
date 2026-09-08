@@ -376,18 +376,11 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            @php
-                $branchImages = [
-                    'Downtown Flagship' => 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=800&q=80',
-                    'Seaside Arena' => 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80',
-                    'Oasis Health Club' => 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=800&q=80',
-                ];
-            @endphp
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($featuredBranches as $branch)
                 <div class="rounded-3xl bg-neutral-900 border border-neutral-800 overflow-hidden hover:border-rose-500/50 hover:shadow-2xl hover:shadow-rose-950/20 transition duration-300 flex flex-col">
                     <div class="relative h-56 overflow-hidden">
-                        <img src="{{ $branchImages[$branch->name] ?? 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80' }}" 
+                        <img src="{{ $branch->image_url }}" 
                              alt="{{ $branch->name }}" 
                              class="h-full w-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-neutral-900 via-transparent to-transparent"></div>
@@ -409,7 +402,13 @@
                         </div>
 
                         <div class="pt-4 border-t border-neutral-800/80 flex items-center justify-between">
-                            <span class="text-xs text-neutral-400">Plans from <strong class="text-white">${{ $branch->membershipPlans->min('price') }}</strong></span>
+                            <span class="text-xs text-neutral-400">
+                                @if($branch->membershipPlans->isNotEmpty())
+                                    Plans from <strong class="text-white">${{ number_format($branch->membershipPlans->min('price'), 2) }}</strong>
+                                @else
+                                    <strong class="text-neutral-400">Flexible Passes</strong>
+                                @endif
+                            </span>
                             <a href="{{ route('memberships.index') }}" 
                                class="px-4 py-2 rounded-xl bg-neutral-800 hover:bg-rose-600 text-white font-bold text-xs uppercase tracking-wider transition">
                                 View Plans

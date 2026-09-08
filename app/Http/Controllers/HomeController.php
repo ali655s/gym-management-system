@@ -28,7 +28,6 @@ class HomeController extends Controller
 
         $featuredBranches = Branch::active()
             ->with(['membershipPlans' => fn($q) => $q->active()])
-            ->take(3)
             ->get();
 
         return view('pages.home', compact('trainers', 'partners', 'testimonials', 'stats', 'featuredBranches'));

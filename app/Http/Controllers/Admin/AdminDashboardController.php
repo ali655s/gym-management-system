@@ -18,6 +18,7 @@ class AdminDashboardController extends Controller
     public function index(): View
     {
         $totalMembers = \App\Models\Member::count();
+        $totalBranches = \App\Models\Branch::count();
 
         $activeSubscriptions = \App\Models\Subscription::where('status', 'active')
             ->where('end_date', '>=', now())
@@ -52,15 +53,22 @@ class AdminDashboardController extends Controller
             ->limit(5)
             ->get();
 
+        $dashboardBranches = \App\Models\Branch::withCount(['membershipPlans', 'gymClasses', 'members'])
+            ->latest()
+            ->limit(4)
+            ->get();
+
         return view('admin.dashboard', compact(
             'totalMembers',
+            'totalBranches',
             'activeSubscriptions',
             'totalRevenue',
             'pendingFranchise',
             'unreadMessages',
             'monthlyLabels',
             'monthlyRevenue',
-            'recentSubscriptions'
+            'recentSubscriptions',
+            'dashboardBranches'
         ));
     }
 }

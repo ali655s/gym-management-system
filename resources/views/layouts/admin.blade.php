@@ -75,8 +75,23 @@
                 </div>
             </header>
             @if (session('success'))
-                <div class="bg-green-600 text-white p-3 rounded mb-4">
+                <div class="bg-green-600/90 border border-green-500 text-white p-3 rounded mb-4">
                     {{ session('success') }}
+                </div>
+            @endif
+            @if (session('error'))
+                <div class="bg-red-600/90 border border-red-500 text-white p-3 rounded mb-4">
+                    {{ session('error') }}
+                </div>
+            @endif
+            @if ($errors->any())
+                <div class="bg-red-600/90 border border-red-500 text-white p-4 rounded mb-4">
+                    <p class="font-bold mb-1">Please fix the following errors:</p>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
             @endif
             @yield('content')
@@ -99,11 +114,12 @@
     <script>
         // Global helper for delete confirmation links
         document.addEventListener('click', function (e) {
-            if (e.target.matches('[data-confirm]')) {
+            const target = e.target.closest('[data-confirm]');
+            if (target) {
                 e.preventDefault();
-                const modal = e.target.closest('[x-data]').__x;
-                modal.message = e.target.dataset.confirmMessage || 'Are you sure?';
-                modal.form = e.target.getAttribute('href');
+                const modal = document.querySelector('[x-data*="show:false"]').__x;
+                modal.message = target.dataset.confirmMessage || 'Are you sure?';
+                modal.form = target.dataset.confirmAction || target.getAttribute('href');
                 modal.show = true;
             }
         });
