@@ -26,8 +26,8 @@ class GymClassController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('trainer_name', 'like', "%{$search}%")
-                  ->orWhere('days', 'like', "%{$search}%");
+                    ->orWhere('trainer_name', 'like', "%{$search}%")
+                    ->orWhere('days', 'like', "%{$search}%");
             });
         }
 
@@ -52,6 +52,10 @@ class GymClassController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $request->merge([
+            'is_active' => $request->boolean('is_active'),
+        ]);
+
         $validated = $request->validate([
             'branch_id' => ['required', 'exists:branches,id'],
             'name' => ['required', 'string', 'max:255'],
@@ -61,10 +65,8 @@ class GymClassController extends Controller
             'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
             'days' => ['required', 'string', 'max:255'],
             'capacity' => ['required', 'integer', 'min:1', 'max:500'],
-            'is_active' => ['nullable', 'boolean'],
+            'is_active' => ['boolean'],
         ]);
-
-        $validated['is_active'] = $request->boolean('is_active');
 
         GymClass::create($validated);
 
@@ -78,8 +80,9 @@ class GymClassController extends Controller
     public function edit(GymClass $gymClass): View
     {
         $branches = Branch::orderBy('name')->get();
+        $class = $gymClass; // تم تعريفه باسم $class ليوافق المكتوب في ملف الـ Blade
 
-        return view('admin.gym-classes.edit', compact('gymClass', 'branches'));
+        return view('admin.gym-classes.edit', compact('class', 'branches'));
     }
 
     /**
@@ -87,6 +90,10 @@ class GymClassController extends Controller
      */
     public function update(Request $request, GymClass $gymClass): RedirectResponse
     {
+        $request->merge([
+            'is_active' => $request->boolean('is_active'),
+        ]);
+
         $validated = $request->validate([
             'branch_id' => ['required', 'exists:branches,id'],
             'name' => ['required', 'string', 'max:255'],
@@ -96,10 +103,8 @@ class GymClassController extends Controller
             'end_time' => ['required'],
             'days' => ['required', 'string', 'max:255'],
             'capacity' => ['required', 'integer', 'min:1', 'max:500'],
-            'is_active' => ['nullable', 'boolean'],
+            'is_active' => ['boolean'],
         ]);
-
-        $validated['is_active'] = $request->boolean('is_active');
 
         $gymClass->update($validated);
 

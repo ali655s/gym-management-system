@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" x-data="{ mobileSidebarOpen: false }" @keydown.window.escape="mobileSidebarOpen = false">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,25 +8,30 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
 </head>
+
 <body class="bg-gray-900 text-white font-sans">
-<!-- Mobile top bar removed to avoid duplicate header -->
 
     <div class="flex min-h-screen">
         <!-- Mobile backdrop overlay -->
-        <div x-show="mobileSidebarOpen" 
-             @click="mobileSidebarOpen = false" 
-             class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden" 
-             style="display: none;"></div>
+        <div x-show="mobileSidebarOpen"
+            x-cloak
+            @click="mobileSidebarOpen = false"
+            class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"></div>
 
         <!-- Sidebar -->
-        <aside :class="mobileSidebarOpen ? 'fixed inset-y-0 left-0 z-50 flex flex-col' : 'hidden md:flex md:flex-col'" 
-               class="bg-gray-800 w-64 flex-shrink-0">
+        <aside :class="mobileSidebarOpen ? 'fixed inset-y-0 left-0 z-50 flex flex-col' : 'hidden md:flex md:flex-col'"
+            class="bg-gray-800 w-64 flex-shrink-0">
             <div class="p-4 flex items-center justify-between">
                 <h2 class="text-xl font-bold text-red-500">Gym Admin</h2>
                 <button @click="mobileSidebarOpen = false" class="text-gray-400 hover:text-white md:hidden" aria-label="Close sidebar">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
@@ -58,7 +64,7 @@
                 <div class="flex items-center space-x-3">
                     <button @click="mobileSidebarOpen = !mobileSidebarOpen" class="text-gray-400 hover:text-white focus:outline-none md:hidden" aria-label="Open sidebar">
                         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
                     <h1 class="text-2xl font-semibold">@yield('title', 'Dashboard')</h1>
@@ -74,55 +80,66 @@
                     <a href="{{ route('logout') }}" class="text-gray-300 hover:text-white">Logout</a>
                 </div>
             </header>
+
             @if (session('success'))
-                <div class="bg-green-600/90 border border-green-500 text-white p-3 rounded mb-4">
-                    {{ session('success') }}
-                </div>
+            <div class="bg-green-600/90 border border-green-500 text-white p-3 rounded mb-4">
+                {{ session('success') }}
+            </div>
             @endif
             @if (session('error'))
-                <div class="bg-red-600/90 border border-red-500 text-white p-3 rounded mb-4">
-                    {{ session('error') }}
-                </div>
+            <div class="bg-red-600/90 border border-red-500 text-white p-3 rounded mb-4">
+                {{ session('error') }}
+            </div>
             @endif
             @if ($errors->any())
-                <div class="bg-red-600/90 border border-red-500 text-white p-4 rounded mb-4">
-                    <p class="font-bold mb-1">Please fix the following errors:</p>
-                    <ul class="list-disc list-inside text-sm space-y-1">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+            <div class="bg-red-600/90 border border-red-500 text-white p-4 rounded mb-4">
+                <p class="font-bold mb-1">Please fix the following errors:</p>
+                <ul class="list-disc list-inside text-sm space-y-1">
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
             @endif
+
             @yield('content')
         </main>
     </div>
+
     <!-- Confirmation modal (Alpine.js) -->
-    <div x-data="{ show:false, message:'', form:'' }" x-show="show" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div x-data="{ show: false, message: '', formUrl: '' }"
+        x-show="show"
+        x-cloak
+        id="delete-modal"
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
         <div class="bg-gray-800 p-6 rounded shadow-lg w-96">
-            <p class="mb-4" x-text="message"></p>
-            <form :action="form" method="POST" x-ref="form">
+            <p class="mb-4 text-white" x-text="message"></p>
+            <form :action="formUrl" method="POST">
                 @csrf
                 @method('DELETE')
                 <div class="flex justify-end space-x-3">
-                    <button type="button" @click="show=false" class="px-4 py-2 bg-gray-600 rounded">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-red-600 rounded">Delete</button>
+                    <button type="button" @click="show = false" class="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded text-white">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-white">Delete</button>
                 </div>
             </form>
         </div>
     </div>
+
     <script>
-        // Global helper for delete confirmation links
-        document.addEventListener('click', function (e) {
+        document.addEventListener('click', function(e) {
             const target = e.target.closest('[data-confirm]');
             if (target) {
                 e.preventDefault();
-                const modal = document.querySelector('[x-data*="show:false"]').__x;
-                modal.message = target.dataset.confirmMessage || 'Are you sure?';
-                modal.form = target.dataset.confirmAction || target.getAttribute('href');
-                modal.show = true;
+                const modalEl = document.getElementById('delete-modal');
+                if (modalEl && window.Alpine) {
+                    const data = Alpine.$data(modalEl);
+                    data.message = target.dataset.confirmMessage || 'Are you sure you want to delete this item?';
+                    data.formUrl = target.dataset.confirmAction || target.getAttribute('href');
+                    data.show = true;
+                }
             }
         });
     </script>
 </body>
+
 </html>

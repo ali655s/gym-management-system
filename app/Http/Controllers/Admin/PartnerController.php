@@ -41,14 +41,17 @@ class PartnerController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // دمج قيمة boolean صريحة للـ is_active قبل الـ Validation
+        $request->merge([
+            'is_active' => $request->boolean('is_active'),
+        ]);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:2048'],
             'website' => ['nullable', 'url', 'max:255'],
-            'is_active' => ['nullable', 'boolean'],
+            'is_active' => ['boolean'],
         ]);
-
-        $validated['is_active'] = $request->boolean('is_active');
 
         if ($request->hasFile('logo')) {
             $validated['logo'] = $request->file('logo')->store('partners', 'public');
@@ -73,14 +76,17 @@ class PartnerController extends Controller
      */
     public function update(Request $request, Partner $partner): RedirectResponse
     {
+        // دمج قيمة boolean صريحة للـ is_active قبل الـ Validation
+        $request->merge([
+            'is_active' => $request->boolean('is_active'),
+        ]);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:2048'],
             'website' => ['nullable', 'url', 'max:255'],
-            'is_active' => ['nullable', 'boolean'],
+            'is_active' => ['boolean'],
         ]);
-
-        $validated['is_active'] = $request->boolean('is_active');
 
         if ($request->hasFile('logo')) {
             if ($partner->logo && Storage::disk('public')->exists($partner->logo)) {

@@ -10,7 +10,7 @@
 
 {{-- Search --}}
 <form method="GET" class="mb-4">
-    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search partners..." class="p-2 bg-gray-700 rounded"/>
+    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search partners..." class="p-2 bg-gray-700 rounded" />
     <button type="submit" class="bg-gray-600 text-white px-3 rounded ml-2">Filter</button>
 </form>
 
@@ -18,6 +18,7 @@
     <thead>
         <tr class="text-left">
             <th class="px-4 py-2">ID</th>
+            <th class="px-4 py-2">Logo</th>
             <th class="px-4 py-2">Name</th>
             <th class="px-4 py-2">Website</th>
             <th class="px-4 py-2">Active</th>
@@ -28,6 +29,13 @@
         @foreach($partners as $partner)
         <tr class="border-t border-gray-700">
             <td class="px-4 py-2">{{ $partner->id }}</td>
+            <td class="px-4 py-2">
+                @if($partner->logo)
+                <img src="{{ asset('storage/' . $partner->logo) }}" alt="{{ $partner->name }}" class="w-10 h-10 object-cover rounded">
+                @else
+                <span class="text-gray-400 text-xs">No Logo</span>
+                @endif
+            </td>
             <td class="px-4 py-2">{{ $partner->name }}</td>
             <td class="px-4 py-2"><a href="{{ $partner->website }}" target="_blank" class="text-blue-400">{{ $partner->website }}</a></td>
             <td class="px-4 py-2">{{ $partner->is_active ? 'Yes' : 'No' }}</td>

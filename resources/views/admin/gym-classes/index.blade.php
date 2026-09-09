@@ -10,11 +10,11 @@
 
 {{-- Filters --}}
 <form method="GET" class="mb-4 flex space-x-4">
-    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search..." class="p-2 bg-gray-700 rounded"/>
+    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search..." class="p-2 bg-gray-700 rounded" />
     <select name="branch_id" class="p-2 bg-gray-700 rounded">
         <option value="">All Branches</option>
         @foreach($branches as $branch)
-            <option value="{{ $branch->id }}" {{ request('branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+        <option value="{{ $branch->id }}" {{ request('branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
         @endforeach
     </select>
     <button type="submit" class="bg-gray-600 text-white px-3 rounded">Filter</button>
@@ -43,9 +43,17 @@
             <td class="px-4 py-2">{{ $class->days }}</td>
             <td class="px-4 py-2">{{ $class->capacity }}</td>
             <td class="px-4 py-2">{{ $class->is_active ? 'Yes' : 'No' }}</td>
-            <td class="px-4 py-2 space-x-2">
-                <a href="{{ route('admin.gym-classes.edit', $class) }}" class="text-blue-400">Edit</a>
-                <a href="#" data-confirm data-confirm-message="Delete this class?" data-confirm-action="{{ route('admin.gym-classes.destroy', $class) }}" class="text-red-400">Delete</a>
+            <td class="px-4 py-2 space-x-2 flex items-center">
+                <a href="{{ route('admin.gym-classes.edit', $class) }}" class="text-blue-400 mr-2">Edit</a>
+
+                {{-- Form الحذف الصحيح --}}
+                <form action="{{ route('admin.gym-classes.destroy', $class) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this class?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="text-red-400 hover:text-red-600 bg-transparent border-0 p-0 cursor-pointer">
+                        Delete
+                    </button>
+                </form>
             </td>
         </tr>
         @endforeach
