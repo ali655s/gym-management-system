@@ -310,25 +310,27 @@
             @forelse($trainers as $trainer)
                 <div class="rounded-3xl bg-neutral-900 border border-neutral-800 overflow-hidden hover:border-rose-500/50 hover:-translate-y-1.5 transition duration-300 group flex flex-col">
                     
+                    
                     <!-- Trainer Photo -->
                     <div class="relative aspect-4/5 overflow-hidden bg-neutral-950">
+
                         @php
-                            $trainerImages = [
-                                'Marcus Stone' => 'https://images.unsplash.com/photo-1567013127542-490d757e51fc?auto=format&fit=crop&w=800&q=80',
-                                'Elena Rostova' => 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800&q=80',
-                                'David Miller' => 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=800&q=80',
-                            ];
-                            $displayImage = $trainerImages[$trainer->name] ?? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80';
+                            $displayImage = $trainer->image
+                                ? asset('storage/' . $trainer->image)
+                                : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80';
                         @endphp
-                        <img src="{{ $displayImage }}" 
-                             alt="{{ $trainer->name }}" 
-                             class="h-full w-full object-cover object-top group-hover:scale-105 transition duration-500">
+
+                        <img src="{{ $displayImage }}"
+                            alt="{{ $trainer->name }}"
+                            class="h-full w-full object-cover object-top group-hover:scale-105 transition duration-500">
+
                         <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-transparent to-transparent"></div>
                         
                         <!-- Experience Badge -->
                         <div class="absolute top-4 right-4 px-3 py-1 rounded-full bg-neutral-950/80 backdrop-blur-md border border-neutral-800 text-neutral-200 text-xs font-bold">
                             {{ $trainer->experience_years }}+ Yrs Experience
                         </div>
+
                     </div>
 
                     <!-- Details -->
