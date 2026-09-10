@@ -51,4 +51,17 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
         $response->assertRedirect('/');
     }
+
+    public function test_admin_dashboard_renders_logout_as_post_form(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $response = $this->actingAs($admin)->get(route('admin.dashboard'));
+
+        $response->assertOk();
+        $response->assertSee(route('logout'));
+        $response->assertSee('action="' . route('logout') . '"', false);
+        $response->assertSee('method="POST"', false);
+        $response->assertDontSee('href="' . route('logout') . '"', false);
+    }
 }

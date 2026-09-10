@@ -77,7 +77,10 @@
                         <span>View Website</span>
                     </a>
                     <span class="text-gray-300">{{ Auth::user()->name }}</span>
-                    <a href="{{ route('logout') }}" class="text-gray-300 hover:text-white">Logout</a>
+                    <form method="POST" action="{{ route('logout') }}" class="inline-flex items-center">
+                        @csrf
+                        <button type="submit" class="text-gray-300 hover:text-white transition">Logout</button>
+                    </form>
                 </div>
             </header>
 

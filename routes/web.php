@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FranchiseController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\MemberSubscriptionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TrainerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/branches', [BranchController::class, 'index'])->name('branches.index');
+Route::get('/trainers', [TrainerController::class, 'index'])->name('trainers.index');
 Route::get('/memberships', [MembershipController::class, 'index'])->name('memberships.index');
 Route::get('/franchise', [FranchiseController::class, 'index'])->name('franchise.index');
 Route::post('/franchise', [FranchiseController::class, 'store'])->name('franchise.store');
@@ -59,6 +63,8 @@ Route::middleware(['auth', 'admin'])
         Route::resource('members', App\Http\Controllers\Admin\MemberController::class);
         Route::resource('users', App\Http\Controllers\Admin\UserController::class);
         Route::resource('subscriptions', App\Http\Controllers\Admin\SubscriptionController::class)->only(['index']);
+        Route::patch('subscriptions/{subscription}/approve', [App\Http\Controllers\Admin\SubscriptionController::class, 'approve'])->name('subscriptions.approve');
+        Route::patch('subscriptions/{subscription}/reject', [App\Http\Controllers\Admin\SubscriptionController::class, 'reject'])->name('subscriptions.reject');
         Route::patch('subscriptions/{subscription}/renew', [App\Http\Controllers\Admin\SubscriptionController::class, 'renew'])->name('subscriptions.renew');
         Route::patch('subscriptions/{subscription}/cancel', [App\Http\Controllers\Admin\SubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
         Route::get('franchise-applications', [App\Http\Controllers\Admin\FranchiseApplicationController::class, 'index'])->name('franchise-applications.index');

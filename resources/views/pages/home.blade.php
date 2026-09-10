@@ -360,6 +360,18 @@
             @endforelse
         </div>
 
+        @if($trainers->isNotEmpty())
+            <!-- Show All Coaches Button -->
+            <div class="mt-14 text-center">
+                <a href="{{ route('trainers.index') }}" 
+                   class="inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-neutral-900 hover:bg-rose-600 text-white font-black text-xs uppercase tracking-widest border border-neutral-800 hover:border-rose-500 shadow-xl shadow-neutral-950/50 hover:shadow-rose-950/40 hover:scale-105 active:scale-95 transition duration-300 group">
+                    <span>Show All Coaches</span>
+                    <svg class="h-4 w-4 ml-2.5 text-rose-500 group-hover:text-white group-hover:translate-x-1 transition duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </a>
+            </div>
+        @endif
     </div>
 </section>
 
@@ -379,7 +391,7 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @foreach($featuredBranches as $branch)
+            @forelse($featuredBranches as $branch)
                 <div class="rounded-3xl bg-neutral-900 border border-neutral-800 overflow-hidden hover:border-rose-500/50 hover:shadow-2xl hover:shadow-rose-950/20 transition duration-300 flex flex-col">
                     <div class="relative h-56 overflow-hidden">
                         <img src="{{ $branch->image_url }}" 
@@ -418,8 +430,25 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <div class="col-span-1 md:col-span-2 lg:col-span-3 text-center py-12 text-neutral-500">
+                    No branch locations available at this time.
+                </div>
+            @endforelse
         </div>
+
+        @if($featuredBranches->isNotEmpty())
+            <!-- Show All Branches Button -->
+            <div class="mt-14 text-center">
+                <a href="{{ route('branches.index') }}" 
+                   class="inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-neutral-900 hover:bg-rose-600 text-white font-black text-xs uppercase tracking-widest border border-neutral-800 hover:border-rose-500 shadow-xl shadow-neutral-950/50 hover:shadow-rose-950/40 hover:scale-105 active:scale-95 transition duration-300 group">
+                    <span>Show All Branches</span>
+                    <svg class="h-4 w-4 ml-2.5 text-rose-500 group-hover:text-white group-hover:translate-x-1 transition duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </a>
+            </div>
+        @endif
     </div>
 </section>
 

@@ -15,7 +15,7 @@ class HomeController extends Controller
      */
     public function index(): View
     {
-        $trainers = Trainer::active()->get();
+        $trainers = Trainer::active()->take(3)->get();
         $partners = Partner::active()->get();
         $testimonials = config('testimonials.items', []);
 
@@ -28,6 +28,7 @@ class HomeController extends Controller
 
         $featuredBranches = Branch::active()
             ->with(['membershipPlans' => fn($q) => $q->active()])
+            ->take(3)
             ->get();
 
         return view('pages.home', compact('trainers', 'partners', 'testimonials', 'stats', 'featuredBranches'));
