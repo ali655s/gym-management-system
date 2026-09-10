@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Branch;
 use App\Models\MembershipPlan;
+use App\Models\Subscription;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,17 +48,19 @@ class MembershipController extends Controller
         // Ensure user has an associated member profile
         $member = $user->member;
         if (! $member) {
-            $member = $user->member()->create([
-                'branch_id' => $plan->branch_id,
-            ]);
-        } elseif (! $member->branch_id) {
-            $member->update(['branch_id' => $plan->branch_id]);
+            $member = $user->member()->create();
         }
 
-        // Create or renew subscription using the model business logic
-        $subscription = $member->renewSubscription($plan);
+        // Create pending subscription request
+        $subscription = Subscription::create([
+            'member_id' => $member->id,
+            'membership_plan_id' => $plan->id,
+            'start_date' => now()->toDateString(),
+            'status' => 'pending',
+            'amount_paid' => $plan->price,
+        ]);
 
         return redirect()->route('member.memberships')
-            ->with('success', "Awesome! Your membership subscription to {$plan->branch->name} ({$plan->duration}) has been activated successfully!");
+            ->with('success', "Your subscription request for {$plan->branch->name} (" . str_replace('_', ' ', $plan->duration) . ") has been submitted successfully and is pending admin approval.");
     }
 }

@@ -80,7 +80,7 @@ class GymManagementPhase2Test extends TestCase
         $this->assertDatabaseHas('subscriptions', [
             'member_id' => $memberUser->member->id,
             'membership_plan_id' => $plan->id,
-            'status' => 'active',
+            'status' => 'pending',
         ]);
     }
 

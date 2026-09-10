@@ -159,9 +159,17 @@
                                         <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold uppercase">
                                             Active
                                         </span>
+                                    @elseif($sub->status === 'pending')
+                                        <span class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-bold uppercase">
+                                            Pending Approval
+                                        </span>
                                     @elseif($sub->status === 'expired')
                                         <span class="px-2.5 py-0.5 rounded-full bg-neutral-800 text-neutral-400 border border-neutral-700 text-[10px] font-bold uppercase">
                                             Expired
+                                        </span>
+                                    @elseif($sub->status === 'rejected')
+                                        <span class="px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[10px] font-bold uppercase">
+                                            Rejected
                                         </span>
                                     @else
                                         <span class="px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[10px] font-bold uppercase">
@@ -170,14 +178,20 @@
                                     @endif
                                 </td>
                                 <td class="py-3.5 px-4 text-right">
-                                    <form action="{{ route('subscriptions.renew', $sub->id) }}" method="POST" class="inline"
-                                          onsubmit="return confirm('Renew this plan? If expired, your new period will start today. If active, it starts from the old end date.')">
-                                        @csrf
-                                        <button type="submit" 
-                                                class="px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-rose-600 text-neutral-300 hover:text-white text-[11px] font-bold uppercase tracking-wider transition">
-                                            Renew
-                                        </button>
-                                    </form>
+                                    @if($sub->status === 'active' || $sub->status === 'expired')
+                                        <form action="{{ route('subscriptions.renew', $sub->id) }}" method="POST" class="inline"
+                                              onsubmit="return confirm('Renew this plan? If expired, your new period will start today. If active, it starts from the old end date.')">
+                                            @csrf
+                                            <button type="submit" 
+                                                    class="px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-rose-600 text-neutral-300 hover:text-white text-[11px] font-bold uppercase tracking-wider transition">
+                                                Renew
+                                            </button>
+                                        </form>
+                                    @elseif($sub->status === 'pending')
+                                        <span class="text-neutral-400 text-[11px] italic">Awaiting Admin</span>
+                                    @else
+                                        <span class="text-neutral-500 text-xs">-</span>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
